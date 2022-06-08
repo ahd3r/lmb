@@ -1,0 +1,29 @@
+name: Deploy to Amazon Lambda
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploying function
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 14
+    - run: npm ci
+    - name: build an executable file
+      run: npm build
+    - name: make a zip file
+      run: zip dist.zip index.js
+    - name: configure an aws cli
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: AKIA57UJCRZDQIMHEUXG
+        aws-secret-access-key: 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
+        aws-region: us-east-2
+    - name: deploy aws lambda
+      run: aws lambda update-function-code --function-name=test-lmd --zip-file dist.zip
