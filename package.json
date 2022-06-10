@@ -6,7 +6,9 @@
   "scripts": {
     "start": "ts-node index.ts",
     "start:prod": "node dist/index.js",
-    "build": "tsc && webpack --config webpack.config.js && rimraf build"
+    "prebuild": "rimraf dist",
+    "build": "tsc && webpack --config webpack.config.js",
+    "postbuild": "rimraf build"
   },
   "repository": {
     "type": "git",
