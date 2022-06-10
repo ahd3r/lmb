@@ -16,7 +16,7 @@ jobs:
         node-version: 14
     - run: npm i
     - name: build an executable file
-      run: npm build
+      run: npm run build
     - run: ls
     - run: ls dist
     - name: make a zip file
