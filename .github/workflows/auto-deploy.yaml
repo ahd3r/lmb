@@ -18,7 +18,7 @@ jobs:
     - name: build an executable file
       run: npm run build
     - name: make a zip file
-      run: zip dist.zip dist/index.js
+      run: cd dist && zip ../dist.zip index.js
     - name: configure an aws cli
       uses: aws-actions/configure-aws-credentials@v1
       with:
