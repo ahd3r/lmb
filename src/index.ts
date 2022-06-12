@@ -1,12 +1,12 @@
-import moment from 'moment';
-import { time } from './utils'
+// import moment from 'moment';
+// import { time } from './utils'
 
-console.log(moment().format('DD-MM-YYYY HH-mm-ss DD'));
+// console.log(moment().format('DD-MM-YYYY HH-mm-ss DD'));
 
 export const handler = (...args: any[]) => {
   console.log(args);
   return {
       statusCode: 200,
-      body: JSON.stringify({data: time}),
+      body: JSON.stringify({data: 1}),
   };
 };
