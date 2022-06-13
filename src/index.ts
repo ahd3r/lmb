@@ -102,7 +102,7 @@ interface ContextRequestI {
 }
 
 export const handler = (event: EventRequestI, context: ContextRequestI, callback: Function) => {
-  const data = 3;
+  const data = 4;
   callback(null, {
     statusCode: 200,
     body: JSON.stringify({ data })
