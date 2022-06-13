@@ -103,12 +103,13 @@ interface ContextRequestI {
   logStreamName: string,
   invokedFunctionArn: string,
   awsRequestId: string,
-  getRemainingTimeInMillis: [Function]
+  getRemainingTimeInMillis: Function
 }
 
 export const handler = (event: EventRequestI, context: ContextRequestI, callback: Function) => {
   console.log(event, context, callback);
-  console.log(context.getRemainingTimeInMillis[0]());
+  console.log(context.getRemainingTimeInMillis);
+  console.log(context.getRemainingTimeInMillis());
   callback(null, {
       statusCode: 200,
       body: JSON.stringify({data: time}),
