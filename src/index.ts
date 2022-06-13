@@ -1,8 +1,3 @@
-import moment from 'moment';
-import { time } from './utils'
-
-console.log(moment().format('DD-MM-YYYY HH-mm-ss DD'));
-
 // {
 //   version: '2.0',
 //   routeKey: 'GET /getTime',
@@ -66,50 +61,50 @@ console.log(moment().format('DD-MM-YYYY HH-mm-ss DD'));
 // }
 
 interface EventRequestI {
-  version: string,
-  routeKey: string,
-  rawPath: string,
-  rawQueryString: string,
-  headers: object,
+  version: string;
+  routeKey: string;
+  rawPath: string;
+  rawQueryString: string;
+  headers: object;
   requestContext: {
-    accountId: string,
-    apiId: string,
-    domainName: string,
-    domainPrefix: string,
+    accountId: string;
+    apiId: string;
+    domainName: string;
+    domainPrefix: string;
     http: {
-      method: string,
-      path: string,
-      protocol: string,
-      sourceIp: string,
-      userAgent: string
-    },
-    requestId: string,
-    routeKey: string,
-    stage: string,
-    time: string,
-    timeEpoch: number
-  },
-  isBase64Encoded: false
+      method: string;
+      path: string;
+      protocol: string;
+      sourceIp: string;
+      userAgent: string;
+    };
+    requestId: string;
+    routeKey: string;
+    stage: string;
+    time: string;
+    timeEpoch: number;
+  };
+  isBase64Encoded: false;
 }
 
 interface ContextRequestI {
-  succeed: Function,
-  fail: Function,
-  done: Function,
-  functionVersion: string,
-  functionName: string,
-  memoryLimitInMB: string,
-  logGroupName: string,
-  logStreamName: string,
-  invokedFunctionArn: string,
-  awsRequestId: string,
-  getRemainingTimeInMillis: Function
+  succeed: Function;
+  fail: Function;
+  done: Function;
+  functionVersion: string;
+  functionName: string;
+  memoryLimitInMB: string;
+  logGroupName: string;
+  logStreamName: string;
+  invokedFunctionArn: string;
+  awsRequestId: string;
+  getRemainingTimeInMillis: Function;
 }
 
 export const handler = (event: EventRequestI, context: ContextRequestI, callback: Function) => {
-  console.log(event, context, callback);
+  const data = 1;
   callback(null, {
-      statusCode: 200,
-      body: JSON.stringify({data: time}),
+    statusCode: 200,
+    body: JSON.stringify({ data })
   });
 };
