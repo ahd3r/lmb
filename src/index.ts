@@ -93,9 +93,9 @@ interface EventRequestI {
 }
 
 interface ContextRequestI {
-  succeed: [Function],
-  fail: [Function],
-  done: [Function],
+  succeed: Function,
+  fail: Function,
+  done: Function,
   functionVersion: string,
   functionName: string,
   memoryLimitInMB: string,
@@ -108,8 +108,6 @@ interface ContextRequestI {
 
 export const handler = (event: EventRequestI, context: ContextRequestI, callback: Function) => {
   console.log(event, context, callback);
-  console.log(context.getRemainingTimeInMillis);
-  console.log(context.getRemainingTimeInMillis());
   callback(null, {
       statusCode: 200,
       body: JSON.stringify({data: time}),
