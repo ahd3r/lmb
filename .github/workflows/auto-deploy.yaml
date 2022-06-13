@@ -14,7 +14,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - run: npm i
+    - run: npm install --production
     - name: build an executable file
       run: npm run build
     - name: make a zip file
