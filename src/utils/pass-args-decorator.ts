@@ -1,5 +1,6 @@
 import { validateSync } from 'class-validator';
 import { EventRequestI } from '..';
+import { ArrayValidationError } from './errors';
 
 interface ParamProxy {
   [methodName: string]: {
@@ -20,15 +21,21 @@ export const PassArgs = (target: any, propertyKey: string, descriptor: PropertyD
       .sort(([a]: any, [b]: any) => a - b)
       .map(([key, value]: any) => {
         if (value.valueType === 'Body') {
-          // TODO: check how is right
-          const arg = (event as any).body;
+          const arg = JSON.parse(event.body);
           if (value.validationDto) {
-            validateSync(value.validationDto, arg);
+            const validateObj = new value.validationDto();
+            Object.entries(arg).forEach(([key, value]) => {
+              validateObj[key] = value;
+            });
+            const errors = validateSync(validateObj);
+            if (errors?.length) {
+              throw new ArrayValidationError('Validator Error', errors);
+            }
+            return validateObj;
           }
           return arg;
         } else if (value.valueType === 'Param') {
-          // TODO: check how is right
-          const arg = (event as any).param;
+          const arg = event.pathParameters;
           if (value.valueKey) {
             return arg[value.valueKey];
           }
@@ -39,8 +46,7 @@ export const PassArgs = (target: any, propertyKey: string, descriptor: PropertyD
           }
           return event.headers;
         } else if (value.valueType === 'Query') {
-          // TODO: check how is right
-          const arg = (event as any).query;
+          const arg = event.queryStringParameters;
           if (value.valueKey) {
             return arg[value.valueKey];
           }

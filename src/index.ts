@@ -76,6 +76,7 @@ export interface EventRequestI {
   rawPath: string;
   rawQueryString: string;
   headers: any;
+  queryStringParameters?: any;
   requestContext: {
     accountId: string;
     apiId: string;
@@ -94,6 +95,8 @@ export interface EventRequestI {
     time: string;
     timeEpoch: number;
   };
+  pathParameters?: any;
+  body?: string;
   isBase64Encoded: false;
   user?: User | Admin;
 }
@@ -113,9 +116,6 @@ interface ContextRequestI {
 }
 
 /**
- * check how body will look like
- * check how param will look like
- * check how query will look like
  * will work reflect-metadata like this?
  * run lambda to execute all migrations before
  * change approach to build a lambdas
