@@ -1,3 +1,13 @@
+import 'reflect-metadata';
+
+import { adminController } from './controller/admin.controller';
+import { authController } from './controller/auth.controller';
+import { userController } from './controller/user.controller';
+import { Admin } from './model/Admin';
+import { User } from './model/User';
+import { DB } from './utils/db';
+import { NotFoundError, ServerError } from './utils/errors';
+
 // {
 //   version: '2.0',
 //   routeKey: 'GET /getTime',
@@ -60,12 +70,12 @@
 //   getRemainingTimeInMillis: [Function: getRemainingTimeInMillis]
 // }
 
-interface EventRequestI {
+export interface EventRequestI {
   version: string;
   routeKey: string;
   rawPath: string;
   rawQueryString: string;
-  headers: object;
+  headers: any;
   requestContext: {
     accountId: string;
     apiId: string;
@@ -85,6 +95,7 @@ interface EventRequestI {
     timeEpoch: number;
   };
   isBase64Encoded: false;
+  user?: User | Admin;
 }
 
 interface ContextRequestI {
@@ -101,10 +112,89 @@ interface ContextRequestI {
   getRemainingTimeInMillis: Function;
 }
 
-export const handler = (event: EventRequestI, context: ContextRequestI, callback: Function) => {
-  const data = 4;
-  callback(null, {
-    statusCode: 200,
-    body: JSON.stringify({ data })
-  });
+/**
+ * check how body will look like
+ * check how param will look like
+ * check how query will look like
+ * will work reflect-metadata like this?
+ * run lambda to execute all migrations before
+ * change approach to build a lambdas
+ */
+export const handler = async (
+  event: EventRequestI,
+  context: ContextRequestI,
+  callback: Function
+) => {
+  const db = DB.getDb();
+
+  try {
+    let data;
+    let pagination;
+    switch (true) {
+      case event.requestContext.http.method === 'POST' &&
+        event.requestContext.http.path === '/signup':
+        data = await (userController.create as any)(event);
+        break;
+      case event.requestContext.http.method === 'POST' &&
+        event.requestContext.http.path === '/signup-admin':
+        data = await (adminController.create as any)(event);
+        break;
+      case event.requestContext.http.method === 'POST' &&
+        event.requestContext.http.path === '/login':
+        data = await (authController.login as any)(event);
+        break;
+      case event.requestContext.http.method === 'POST' &&
+        event.requestContext.http.path === '/logout':
+        data = await (authController.logout as any)(event);
+        break;
+      case event.requestContext.http.method === 'POST' &&
+        event.requestContext.http.path === '/send-recovery-password':
+        data = await (authController.sendRecoveryPassword as any)(event);
+        break;
+      case event.requestContext.http.method === 'PATCH' &&
+        event.requestContext.http.path === '/set-2fa':
+        data = await (userController.set2fa as any)(event);
+        break;
+      case event.requestContext.http.method === 'PATCH' &&
+        event.requestContext.http.path === '/admin/set-2fa':
+        data = await (adminController.set2fa as any)(event);
+        break;
+      case event.requestContext.http.method === 'POST' &&
+        event.requestContext.http.path === '/admin/send-recovery-password':
+        data = await (authController.sendAdminRecoveryPassword as any)(event);
+        break;
+      case event.requestContext.http.method === 'PATCH' &&
+        event.requestContext.http.path.startsWith('/recovery-password'):
+        data = await (authController.recoveryPassword as any)(event);
+        break;
+      case event.requestContext.http.method === 'PATCH' &&
+        event.requestContext.http.path.startsWith('/admin/recovery-password'):
+        data = await (authController.recoveryAdminPassword as any)(event);
+        break;
+      case event.requestContext.http.method === 'PATCH' &&
+        event.requestContext.http.path === '/recovery-2fa':
+        data = await (authController.recovery2fa as any)(event);
+        break;
+      default:
+        throw new NotFoundError('Not found route');
+    }
+
+    callback(null, {
+      statusCode: event.requestContext.http.method === 'POST' ? 201 : 200,
+      body: JSON.stringify({ data, pagination })
+    });
+  } catch (error: any) {
+    let err = error;
+
+    if (!err.status) {
+      err = new ServerError(error.message);
+    }
+
+    callback(null, {
+      statusCode: err.status,
+      body: JSON.stringify({ error: err })
+    });
+  } finally {
+    await db.close();
+  }
 };

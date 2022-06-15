@@ -14,7 +14,7 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 16
-    - run: npm install --production
+    - run: npm i
     - name: build an executable file
       run: npm run build
     - name: make a zip file
@@ -27,3 +27,5 @@ jobs:
         aws-region: us-east-1
     - name: deploy aws lambda
       run: aws lambda update-function-code --function-name=test-lmd --zip-file fileb://dist.zip
+    - name: deploy second aws lambda
+    - name: invoke second aws lambda to run migration
