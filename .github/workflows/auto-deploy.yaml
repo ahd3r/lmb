@@ -19,7 +19,8 @@ jobs:
       run: npm run build
     - run: cp -R ./node_modules ./build/node_modules
     - name: make a zip file
-      run: cd build && ls
+      run: zip -r build.zip build/*
+    - run: ls
     #   run: cd build && zip ../build.zip .
     # - name: configure an aws cli
     #   uses: aws-actions/configure-aws-credentials@v1
