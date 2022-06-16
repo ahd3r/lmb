@@ -12,25 +12,40 @@ export const handler = async () => {
     password: dbPass
   });
 
-  const umzug = new Umzug({
-    migrations: {
-      glob: '.',
-      resolve: ({ name, path, context }) => {
-        const migration = require(path);
-        return {
-          name,
-          up: async () => {
-            return migration?.up(context, Sequelize);
-          },
-          down: async () => {
-            return migration?.down(context, Sequelize);
-          }
-        };
-      }
-    },
-    context: sequelize.getQueryInterface(),
-    storage: new SequelizeStorage({ sequelize }),
-    logger: console
-  });
-  await umzug.up();
+  try {
+    await sequelize.query('SELECT table_name FROM information_schema.columns');
+    try {
+      await sequelize.query(`CREATE DATABASE ${process.env.DB_DATABASE}`);
+      console.log('Database created');
+    } catch (e) {
+      console.log('Database has already been created');
+    }
+
+    const umzug = new Umzug({
+      migrations: {
+        glob: './*-migration.js',
+        resolve: ({ name, path, context }) => {
+          const migration = require(path);
+          return {
+            name,
+            up: async () => {
+              return migration.up(context, Sequelize);
+            },
+            down: async () => {
+              return migration.down(context, Sequelize);
+            }
+          };
+        }
+      },
+      context: sequelize.getQueryInterface(),
+      storage: new SequelizeStorage({ sequelize }),
+      logger: console
+    });
+    await umzug.up();
+  } catch (e) {
+    console.log('An error occurred');
+    console.log(e);
+  } finally {
+    await sequelize.close();
+  }
 };
