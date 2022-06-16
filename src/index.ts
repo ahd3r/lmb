@@ -97,7 +97,7 @@ export interface EventRequestI {
   };
   pathParameters?: any;
   body?: string;
-  isBase64Encoded: false;
+  isBase64Encoded: boolean;
   user?: User | Admin;
 }
 
@@ -126,6 +126,10 @@ export const handler = async (
     let data;
     let pagination;
     switch (true) {
+      case event.requestContext.http.method === 'GET' &&
+        event.requestContext.http.path === '/healthcheck':
+        data = 'lambda is working';
+        break;
       case event.requestContext.http.method === 'POST' &&
         event.requestContext.http.path === '/signup':
         data = await (userController.create as any)(event);
