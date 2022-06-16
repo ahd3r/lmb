@@ -5,14 +5,14 @@ export class User extends Model {
   @Column({ allowNull: false, primaryKey: true, autoIncrement: true })
   public id: number;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, unique: true })
   public email: number;
 
   @Column({ allowNull: false })
   public password: number;
 
   @Column({ allowNull: true })
-  public recoveryToken: number;
+  public recoveryToken: string;
 
   @Column({ allowNull: false, defaultValue: false })
   public twofa: boolean;

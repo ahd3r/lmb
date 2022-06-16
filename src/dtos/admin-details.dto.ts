@@ -4,7 +4,7 @@ export class AdminDetailsDto {
   public id: number;
   public email: number;
   public password: number;
-  public recoveryToken: number;
+  public recoveryToken: string;
   public twofa: boolean;
   public createdAt: Date;
   public updatedAt: Date;

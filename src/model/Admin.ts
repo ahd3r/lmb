@@ -12,7 +12,7 @@ export class Admin extends Model {
   public password: number;
 
   @Column({ allowNull: true })
-  public recoveryToken: number;
+  public recoveryToken: string;
 
   @Column({ allowNull: false, defaultValue: false })
   public twofa: boolean;
