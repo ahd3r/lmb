@@ -120,6 +120,7 @@ export const handler = async (
   context: ContextRequestI,
   callback: Function
 ) => {
+  console.log(event);
   const db = DB.getDb();
 
   try {
@@ -178,6 +179,7 @@ export const handler = async (
         throw new NotFoundError('Not found route');
     }
 
+    console.log({ data, pagination });
     callback(null, {
       statusCode: event.requestContext.http.method === 'POST' ? 201 : 200,
       body: JSON.stringify({ data, pagination })
@@ -189,6 +191,7 @@ export const handler = async (
       err = new ServerError(error.message);
     }
 
+    console.log({ error: err });
     callback(null, {
       statusCode: err.status,
       body: JSON.stringify({ error: err })
