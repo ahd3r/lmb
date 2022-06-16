@@ -115,11 +115,6 @@ interface ContextRequestI {
   getRemainingTimeInMillis: Function;
 }
 
-/**
- * will work reflect-metadata like this?
- * run lambda to execute all migrations before
- * change approach to build a lambdas
- */
 export const handler = async (
   event: EventRequestI,
   context: ContextRequestI,
