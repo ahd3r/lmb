@@ -20,24 +20,22 @@ jobs:
     - run: cp -R ./node_modules ./build/node_modules
     - name: make a zip file
       run: zip -r build.zip build/*
-    - run: ls
-    #   run: cd build && zip ../build.zip .
-    # - name: configure an aws cli
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #     aws-access-key-id: ${{ secrets.AWS_ID }}
-    #     aws-secret-access-key: ${{ secrets.AWS_SECRET }}
-    #     aws-region: us-east-1
-    # - name: deploy aws lambda
-    #   run: aws lambda update-function-code --function-name=test-lmd --zip-file fileb://build.zip
-    # - name: build an executable file for migration lambda
-    #   run: npm run build-migration
-    # - run: cp -R ./node_modules ./build/node_modules
-    # - name: make a zip file
-    #   run: cd build && zip ../build.zip .
-    # - name: deploy aws lambda for migration
-    #   run: aws lambda update-function-code --function-name=migrations --zip-file fileb://build.zip
-    # - name: invoke second aws lambda to run migration
-    #   run: aws lambda invoke --function-name=migrations res.json
-    # - name: result of second aws lambda invoke
-    #   run: cat res.json
+    - name: configure an aws cli
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+        aws-region: us-east-1
+    - name: deploy aws lambda
+      run: aws lambda update-function-code --function-name=test-lmd --zip-file fileb://build.zip
+    - name: build an executable file for migration lambda
+      run: npm run build-migration
+    - run: cp -R ./node_modules ./build/node_modules
+    - name: make a zip file
+      run: cd build && zip ../build.zip .
+    - name: deploy aws lambda for migration
+      run: aws lambda update-function-code --function-name=migrations --zip-file fileb://build.zip
+    - name: invoke second aws lambda to run migration
+      run: aws lambda invoke --function-name=migrations res.json
+    - name: result of second aws lambda invoke
+      run: cat res.json
