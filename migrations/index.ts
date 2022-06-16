@@ -16,13 +16,21 @@ export const handler = async () => {
     migrations: {
       glob: '.',
       resolve: ({ name, path, context }) => {
+        console.log({ name, path, context });
         const migration = require(path);
+        console.log(migration);
         if (migration.up && migration.down) {
-          console.log(migration.up, migration.down);
+          console.log('inside');
           return {
             name,
-            up: async () => migration.up(context, Sequelize),
-            down: async () => migration.down(context, Sequelize)
+            up: async () => {
+              console.log('inside up');
+              return migration.up(context, Sequelize);
+            },
+            down: async () => {
+              console.log('inside down');
+              return migration.down(context, Sequelize);
+            }
           };
         }
       }
