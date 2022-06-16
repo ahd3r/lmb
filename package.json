@@ -9,7 +9,7 @@
     "build-migration": "tsc --p tsconfig-migration.json",
     "prebuild": "rimraf build",
     "build": "tsc",
-    "test": "jest --config ./test/jest-config.json --detectOpenHandles --forceExit"
+    "test": "npm run build && jest --config ./test/jest-config.json --detectOpenHandles --forceExit"
   },
   "repository": {
     "type": "git",

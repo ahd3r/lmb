@@ -9,5 +9,5 @@ Sequelize migration documentation - https://sequelize.org/master/manual/migratio
 Once you setup connection options you can create a new migration using CLI:
 
 ```bash
-$ npx sequelize-cli migration:generate --name <migration-name>
+$ npx sequelize-cli migration:generate --name <migration-name>-migration
 ```
