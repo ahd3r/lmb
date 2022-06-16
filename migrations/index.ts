@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { Umzug, SequelizeStorage } from 'umzug';
 
-import { dbHost, dbPort, dbUser, dbPass } from './config';
+import { dbHost, dbPort, dbUser, dbPass, dbName } from './config';
 
 export const handler = async () => {
   const sequelize = new Sequelize({
@@ -15,7 +15,7 @@ export const handler = async () => {
   try {
     await sequelize.query('SELECT table_name FROM information_schema.columns');
     try {
-      await sequelize.query(`CREATE DATABASE ${process.env.DB_DATABASE}`);
+      await sequelize.query(`CREATE DATABASE ${dbName}`);
       console.log('Database created');
     } catch (e) {
       console.log('Database has already been created');
