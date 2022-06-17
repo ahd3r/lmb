@@ -121,7 +121,9 @@ export const handler = async (
     console.error(err);
     callback(null, {
       statusCode: err.status,
-      body: JSON.stringify({ error: err })
+      body: JSON.stringify({
+        error: { message: err.message, status: err.status, name: err.name, errors: err.errors }
+      })
     });
   } finally {
     await db.close();

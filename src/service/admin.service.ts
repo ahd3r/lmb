@@ -9,11 +9,15 @@ import { ChangeAdminPasswordRequestDto } from '../dtos/change-admin-password-req
 import { CreateAdminRequestDto } from '../dtos/create-admin-request.dto';
 import { Admin } from '../model/Admin';
 import { salt } from '../utils/config';
-import { NotFoundError } from '../utils/errors';
+import { NotFoundError, ValidationError } from '../utils/errors';
 import { Set2faResponseDto } from '../dtos/set-2fa-response.dto';
 
 class AdminService {
   public async create(data: CreateAdminRequestDto): Promise<AdminDetailsDto> {
+    const adminWithEmail = await Admin.findOne({ where: { email: data.email } });
+    if (adminWithEmail) {
+      throw new ValidationError('Admin with this email already exist');
+    }
     const admin = new Admin({
       email: data.email,
       password: await bcrypt.hash(data.password, 10)

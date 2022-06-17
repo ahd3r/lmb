@@ -1,3 +1,5 @@
+import { ValidationError as ClassValidationError } from 'class-validator';
+
 export class ValidationError extends Error {
   public status: number;
 
@@ -12,11 +14,14 @@ export class ArrayValidationError extends Error {
   public status: number;
   public errors: { message: string }[];
 
-  constructor(msg: string, errors: any[]) {
+  constructor(msg: string, errors: ClassValidationError[]) {
     super(msg);
     this.name = 'ArrayValidationError';
     this.status = 400;
-    this.errors = errors.map((error) => ({ message: error.message }));
+    this.errors = errors
+      .map((error) => Object.values(error.constraints))
+      .reduce((res, arr) => res.concat(arr), [])
+      .map((message) => ({ message })) as any;
   }
 }
 

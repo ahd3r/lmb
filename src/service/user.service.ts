@@ -9,11 +9,15 @@ import { CreateUserRequestDto } from '../dtos/create-user-request.dto';
 import { Set2faResponseDto } from '../dtos/set-2fa-response.dto';
 import { UserDetailsDto } from '../dtos/user-details.dto';
 import { User } from '../model/User';
-import { NotFoundError } from '../utils/errors';
+import { NotFoundError, ValidationError } from '../utils/errors';
 import { salt } from '../utils/config';
 
 class UserService {
   public async create(data: CreateUserRequestDto): Promise<UserDetailsDto> {
+    const userWithEmail = await User.findOne({ where: { email: data.email } });
+    if (userWithEmail) {
+      throw new ValidationError('User with this email already exist');
+    }
     const user = new User({
       email: data.email,
       password: await bcrypt.hash(data.password, 10)

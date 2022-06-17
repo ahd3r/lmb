@@ -29,7 +29,7 @@ export const PassArgs = (target: any, propertyKey: string, descriptor: PropertyD
             });
             const errors = validateSync(validateObj);
             if (errors?.length) {
-              throw new ArrayValidationError('Validator Error', errors);
+              throw new ArrayValidationError('Body Validator Error', errors);
             }
             return validateObj;
           }
@@ -54,7 +54,7 @@ export const PassArgs = (target: any, propertyKey: string, descriptor: PropertyD
         }
       });
 
-    await saveDescriptorValue(...args, event);
+    return await saveDescriptorValue(...args, event);
   };
 };
 
