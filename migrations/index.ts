@@ -54,8 +54,6 @@ export const handler = async () => {
           return {
             name,
             up: async () => {
-              console.log(++counter);
-              console.log(migration.up);
               return migration.up(context, Sequelize);
             },
             down: async () => {
