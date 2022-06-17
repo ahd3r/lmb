@@ -44,6 +44,8 @@ export const handler = async () => {
       delete sequelize.connectionManager.getConnection;
     }
 
+    let counter = 0;
+
     const umzug = new Umzug({
       migrations: {
         glob: './*-migration.js',
@@ -52,6 +54,8 @@ export const handler = async () => {
           return {
             name,
             up: async () => {
+              console.log(++counter);
+              console.log(migration.up);
               return migration.up(context, Sequelize);
             },
             down: async () => {
