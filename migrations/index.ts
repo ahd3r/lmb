@@ -4,26 +4,44 @@ import { Umzug, SequelizeStorage } from 'umzug';
 import { dbHost, dbPort, dbUser, dbPass, dbName } from './config';
 
 export const handler = async () => {
-  const sequelize = new Sequelize({
+  let sequelize = new Sequelize({
     dialect: 'postgres',
     host: dbHost,
     port: dbPort,
     username: dbUser,
     password: dbPass
   });
-  await sequelize.authenticate();
-  sequelize.connectionManager.initPools();
-  if (sequelize.connectionManager.hasOwnProperty('getConnection')) {
-    delete sequelize.connectionManager.getConnection;
-  }
 
   try {
+    await sequelize.authenticate();
+    sequelize.connectionManager.initPools();
+    if (sequelize.connectionManager.hasOwnProperty('getConnection')) {
+      delete sequelize.connectionManager.getConnection;
+    }
+
     await sequelize.query('SELECT table_name FROM information_schema.columns');
     try {
       await sequelize.query(`CREATE DATABASE ${dbName}`);
       console.log('Database created');
     } catch (e) {
       console.log('Database has already been created');
+    }
+
+    await sequelize.close();
+
+    sequelize = new Sequelize({
+      dialect: 'postgres',
+      host: dbHost,
+      port: dbPort,
+      username: dbUser,
+      password: dbPass,
+      database: dbName
+    });
+
+    await sequelize.authenticate();
+    sequelize.connectionManager.initPools();
+    if (sequelize.connectionManager.hasOwnProperty('getConnection')) {
+      delete sequelize.connectionManager.getConnection;
     }
 
     const umzug = new Umzug({
