@@ -59,7 +59,7 @@ export const handler = async (
   callback: Function
 ) => {
   console.log(event);
-  const db = DB.getDb();
+  const db = await DB.getDb();
 
   try {
     let data;
@@ -118,7 +118,7 @@ export const handler = async (
       err = new ServerError(error.message);
     }
 
-    console.log({ error: err });
+    console.error(err);
     callback(null, {
       statusCode: err.status,
       body: JSON.stringify({ error: err })

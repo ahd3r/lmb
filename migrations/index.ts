@@ -11,6 +11,11 @@ export const handler = async () => {
     username: dbUser,
     password: dbPass
   });
+  await sequelize.authenticate();
+  sequelize.connectionManager.initPools();
+  if (sequelize.connectionManager.hasOwnProperty('getConnection')) {
+    delete sequelize.connectionManager.getConnection;
+  }
 
   try {
     await sequelize.query('SELECT table_name FROM information_schema.columns');

@@ -13,7 +13,7 @@ interface ParamProxy {
 }
 
 export const PassArgs = (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
-  const param: ParamProxy = Reflect.getMetadata('parameter-proxy', target);
+  const param: ParamProxy = Reflect.getMetadata('parameter-proxy', target) || {};
   const saveDescriptorValue = descriptor.value;
   descriptor.value = async (event: EventRequestI) => {
     const args = Object.entries(param[propertyKey])
@@ -65,7 +65,7 @@ export const Body = (dto: any) => (target: any, propertyKey: string, argIndex: n
     validationDto: dto,
     valueType: 'Body'
   };
-  Reflect.defineMetadata('parameter-proxy', target, param);
+  Reflect.defineMetadata('parameter-proxy', param, target);
 };
 
 export const Param = (key: string) => (target: any, propertyKey: string, argIndex: number) => {
@@ -75,7 +75,7 @@ export const Param = (key: string) => (target: any, propertyKey: string, argInde
     valueType: 'Param',
     valueKey: key
   };
-  Reflect.defineMetadata('parameter-proxy', target, param);
+  Reflect.defineMetadata('parameter-proxy', param, target);
 };
 
 export const Header = (key: string) => (target: any, propertyKey: string, argIndex: number) => {
@@ -85,7 +85,7 @@ export const Header = (key: string) => (target: any, propertyKey: string, argInd
     valueType: 'Header',
     valueKey: key
   };
-  Reflect.defineMetadata('parameter-proxy', target, param);
+  Reflect.defineMetadata('parameter-proxy', param, target);
 };
 
 export const Query = (key: string) => (target: any, propertyKey: string, argIndex: number) => {
@@ -95,5 +95,5 @@ export const Query = (key: string) => (target: any, propertyKey: string, argInde
     valueType: 'Query',
     valueKey: key
   };
-  Reflect.defineMetadata('parameter-proxy', target, param);
+  Reflect.defineMetadata('parameter-proxy', param, target);
 };

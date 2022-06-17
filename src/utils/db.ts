@@ -6,21 +6,22 @@ import { dbHost, dbName, dbPass, dbPort, dbUser } from './config';
 export class DB {
   private static sequelize: Sequelize;
 
-  private constructor() {
-    DB.sequelize = new Sequelize({
-      dialect: 'postgres',
-      host: dbHost,
-      port: dbPort,
-      username: dbUser,
-      password: dbPass,
-      database: dbName,
-      models: [Admin, User]
-    });
-  }
-
-  public static getDb() {
+  public static async getDb() {
     if (!DB.sequelize) {
-      new DB();
+      DB.sequelize = new Sequelize({
+        dialect: 'postgres',
+        host: dbHost,
+        port: dbPort,
+        username: dbUser,
+        password: dbPass,
+        database: dbName,
+        models: [Admin, User]
+      });
+      await DB.sequelize.authenticate();
+    }
+    DB.sequelize.connectionManager.initPools();
+    if (DB.sequelize.connectionManager.hasOwnProperty('getConnection')) {
+      delete DB.sequelize.connectionManager.getConnection;
     }
     return DB.sequelize;
   }
