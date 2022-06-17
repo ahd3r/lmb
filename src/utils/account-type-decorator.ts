@@ -37,6 +37,6 @@ export const AccountType =
         event.user = admin;
       }
 
-      await saveDescriptorValue(event);
+      return await saveDescriptorValue(event);
     };
   };

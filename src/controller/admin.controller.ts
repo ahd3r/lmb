@@ -20,8 +20,8 @@ class AdminController {
     return adminService.create(data);
   }
 
-  @PassArgs
   @AccountType('user', 'admin')
+  @PassArgs
   public async set2fa(event: EventRequestI): Promise<Set2faResponseDto> {
     return adminService.set2fa(event.user);
   }

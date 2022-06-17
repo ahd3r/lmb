@@ -58,7 +58,13 @@ export const handler = async (
   context: ContextRequestI,
   callback: Function
 ) => {
-  console.log(event);
+  console.log({
+    routeKey: event.routeKey,
+    headers: event.headers,
+    queryStringParameters: event.queryStringParameters,
+    pathParameters: event.pathParameters,
+    body: event.body
+  });
   const db = await DB.getDb();
 
   try {
@@ -84,12 +90,6 @@ export const handler = async (
       case method === 'POST' && route === '/send-recovery-password':
         data = await (authController.sendRecoveryPassword as any)(event);
         break;
-      case method === 'PATCH' && route === '/set-2fa':
-        data = await (userController.set2fa as any)(event);
-        break;
-      case method === 'PATCH' && route === '/admin/set-2fa':
-        data = await (adminController.set2fa as any)(event);
-        break;
       case method === 'POST' && route === '/admin/send-recovery-password':
         data = await (authController.sendAdminRecoveryPassword as any)(event);
         break;
@@ -98,6 +98,12 @@ export const handler = async (
         break;
       case method === 'PATCH' && route.startsWith('/admin/recovery-password'):
         data = await (authController.recoveryAdminPassword as any)(event);
+        break;
+      case method === 'PATCH' && route === '/set-2fa':
+        data = await (userController.set2fa as any)(event);
+        break;
+      case method === 'PATCH' && route === '/admin/set-2fa':
+        data = await (adminController.set2fa as any)(event);
         break;
       case method === 'PATCH' && route === '/recovery-2fa':
         data = await (authController.recovery2fa as any)(event);

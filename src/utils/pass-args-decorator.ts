@@ -16,7 +16,7 @@ export const PassArgs = (target: any, propertyKey: string, descriptor: PropertyD
   const param: ParamProxy = Reflect.getMetadata('parameter-proxy', target) || {};
   const saveDescriptorValue = descriptor.value;
   descriptor.value = async (event: EventRequestI) => {
-    const args = Object.entries(param[propertyKey])
+    const args = Object.entries(param[propertyKey] || {})
       .map(([key, value]) => [Number(key), value])
       .sort(([a]: any, [b]: any) => a - b)
       .map(([key, value]: any) => {

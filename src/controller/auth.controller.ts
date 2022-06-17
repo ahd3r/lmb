@@ -20,8 +20,8 @@ class AuthController {
     return new LoginResponseDto(token);
   }
 
-  @PassArgs
   @AccountType('user', 'admin')
+  @PassArgs
   public async logout(@Header('authorization') token: string): Promise<void> {
     console.log(token);
     console.log('Redundant method, just for amount');

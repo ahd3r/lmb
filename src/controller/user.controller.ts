@@ -14,8 +14,8 @@ class UserController {
     return await userService.create(data);
   }
 
-  @PassArgs
   @AccountType('user', 'admin')
+  @PassArgs
   public async set2fa(event: EventRequestI): Promise<Set2faResponseDto> {
     return userService.set2fa(event.user);
   }
