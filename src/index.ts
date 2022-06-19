@@ -65,7 +65,7 @@ export const handler = async (
     pathParameters: event.pathParameters,
     body: event.body
   });
-  // const db = await DB.getDb();
+  const db = await DB.getDb();
 
   try {
     let data;
@@ -75,39 +75,39 @@ export const handler = async (
       case method === 'GET' && route === '/healthcheck':
         data = 'lambda is working';
         break;
-      // case method === 'POST' && route === '/signup':
-      //   data = await (userController.create as any)(event);
-      //   break;
-      // case method === 'POST' && route === '/signup-admin':
-      //   data = await (adminController.create as any)(event);
-      //   break;
-      // case method === 'POST' && route === '/login':
-      //   data = await (authController.login as any)(event);
-      //   break;
-      // case method === 'POST' && route === '/logout':
-      //   data = await (authController.logout as any)(event);
-      //   break;
-      // case method === 'POST' && route === '/send-recovery-password':
-      //   data = await (authController.sendRecoveryPassword as any)(event);
-      //   break;
-      // case method === 'POST' && route === '/admin/send-recovery-password':
-      //   data = await (authController.sendAdminRecoveryPassword as any)(event);
-      //   break;
-      // case method === 'PATCH' && route.startsWith('/recovery-password'):
-      //   data = await (authController.recoveryPassword as any)(event);
-      //   break;
-      // case method === 'PATCH' && route.startsWith('/admin/recovery-password'):
-      //   data = await (authController.recoveryAdminPassword as any)(event);
-      //   break;
-      // case method === 'PATCH' && route === '/set-2fa':
-      //   data = await (userController.set2fa as any)(event);
-      //   break;
-      // case method === 'PATCH' && route === '/admin/set-2fa':
-      //   data = await (adminController.set2fa as any)(event);
-      //   break;
-      // case method === 'PATCH' && route === '/recovery-2fa':
-      //   data = await (authController.recovery2fa as any)(event);
-      //   break;
+      case method === 'POST' && route === '/signup':
+        data = await (userController.create as any)(event);
+        break;
+      case method === 'POST' && route === '/signup-admin':
+        data = await (adminController.create as any)(event);
+        break;
+      case method === 'POST' && route === '/login':
+        data = await (authController.login as any)(event);
+        break;
+      case method === 'POST' && route === '/logout':
+        data = await (authController.logout as any)(event);
+        break;
+      case method === 'POST' && route === '/send-recovery-password':
+        data = await (authController.sendRecoveryPassword as any)(event);
+        break;
+      case method === 'POST' && route === '/admin/send-recovery-password':
+        data = await (authController.sendAdminRecoveryPassword as any)(event);
+        break;
+      case method === 'PATCH' && route.startsWith('/recovery-password'):
+        data = await (authController.recoveryPassword as any)(event);
+        break;
+      case method === 'PATCH' && route.startsWith('/admin/recovery-password'):
+        data = await (authController.recoveryAdminPassword as any)(event);
+        break;
+      case method === 'PATCH' && route === '/set-2fa':
+        data = await (userController.set2fa as any)(event);
+        break;
+      case method === 'PATCH' && route === '/admin/set-2fa':
+        data = await (adminController.set2fa as any)(event);
+        break;
+      case method === 'PATCH' && route === '/recovery-2fa':
+        data = await (authController.recovery2fa as any)(event);
+        break;
       default:
         throw new NotFoundError('Not found route');
     }
@@ -132,6 +132,6 @@ export const handler = async (
       })
     });
   } finally {
-    // await db.close();
+    await db.close();
   }
 };
