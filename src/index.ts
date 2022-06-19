@@ -58,80 +58,85 @@ export const handler = async (
   context: ContextRequestI,
   callback: Function
 ) => {
-  console.log({
-    routeKey: event.routeKey,
-    headers: event.headers,
-    queryStringParameters: event.queryStringParameters,
-    pathParameters: event.pathParameters,
-    body: event.body
+  callback(null, {
+    statusCode: 200,
+    body: JSON.stringify({ data: 'yes' })
   });
-  const db = await DB.getDb();
 
-  try {
-    let data;
-    let pagination;
-    const [method, route] = event.routeKey.split(' ');
-    switch (true) {
-      case method === 'GET' && route === '/healthcheck':
-        data = 'lambda is working';
-        break;
-      case method === 'POST' && route === '/signup':
-        data = await (userController.create as any)(event);
-        break;
-      case method === 'POST' && route === '/signup-admin':
-        data = await (adminController.create as any)(event);
-        break;
-      case method === 'POST' && route === '/login':
-        data = await (authController.login as any)(event);
-        break;
-      case method === 'POST' && route === '/logout':
-        data = await (authController.logout as any)(event);
-        break;
-      case method === 'POST' && route === '/send-recovery-password':
-        data = await (authController.sendRecoveryPassword as any)(event);
-        break;
-      case method === 'POST' && route === '/admin/send-recovery-password':
-        data = await (authController.sendAdminRecoveryPassword as any)(event);
-        break;
-      case method === 'PATCH' && route.startsWith('/recovery-password'):
-        data = await (authController.recoveryPassword as any)(event);
-        break;
-      case method === 'PATCH' && route.startsWith('/admin/recovery-password'):
-        data = await (authController.recoveryAdminPassword as any)(event);
-        break;
-      case method === 'PATCH' && route === '/set-2fa':
-        data = await (userController.set2fa as any)(event);
-        break;
-      case method === 'PATCH' && route === '/admin/set-2fa':
-        data = await (adminController.set2fa as any)(event);
-        break;
-      case method === 'PATCH' && route === '/recovery-2fa':
-        data = await (authController.recovery2fa as any)(event);
-        break;
-      default:
-        throw new NotFoundError('Not found route');
-    }
+  // console.log({
+  //   routeKey: event.routeKey,
+  //   headers: event.headers,
+  //   queryStringParameters: event.queryStringParameters,
+  //   pathParameters: event.pathParameters,
+  //   body: event.body
+  // });
+  // const db = await DB.getDb();
 
-    console.log({ data, pagination });
-    callback(null, {
-      statusCode: method === 'POST' ? 201 : 200,
-      body: JSON.stringify({ data, pagination })
-    });
-  } catch (error: any) {
-    let err = error;
+  // try {
+  //   let data;
+  //   let pagination;
+  //   const [method, route] = event.routeKey.split(' ');
+  //   switch (true) {
+  //     case method === 'GET' && route === '/healthcheck':
+  //       data = 'lambda is working';
+  //       break;
+  //     case method === 'POST' && route === '/signup':
+  //       data = await (userController.create as any)(event);
+  //       break;
+  //     case method === 'POST' && route === '/signup-admin':
+  //       data = await (adminController.create as any)(event);
+  //       break;
+  //     case method === 'POST' && route === '/login':
+  //       data = await (authController.login as any)(event);
+  //       break;
+  //     case method === 'POST' && route === '/logout':
+  //       data = await (authController.logout as any)(event);
+  //       break;
+  //     case method === 'POST' && route === '/send-recovery-password':
+  //       data = await (authController.sendRecoveryPassword as any)(event);
+  //       break;
+  //     case method === 'POST' && route === '/admin/send-recovery-password':
+  //       data = await (authController.sendAdminRecoveryPassword as any)(event);
+  //       break;
+  //     case method === 'PATCH' && route.startsWith('/recovery-password'):
+  //       data = await (authController.recoveryPassword as any)(event);
+  //       break;
+  //     case method === 'PATCH' && route.startsWith('/admin/recovery-password'):
+  //       data = await (authController.recoveryAdminPassword as any)(event);
+  //       break;
+  //     case method === 'PATCH' && route === '/set-2fa':
+  //       data = await (userController.set2fa as any)(event);
+  //       break;
+  //     case method === 'PATCH' && route === '/admin/set-2fa':
+  //       data = await (adminController.set2fa as any)(event);
+  //       break;
+  //     case method === 'PATCH' && route === '/recovery-2fa':
+  //       data = await (authController.recovery2fa as any)(event);
+  //       break;
+  //     default:
+  //       throw new NotFoundError('Not found route');
+  //   }
 
-    if (!err.status) {
-      err = new ServerError(error.message);
-    }
+  //   console.log({ data, pagination });
+  //   callback(null, {
+  //     statusCode: method === 'POST' ? 201 : 200,
+  //     body: JSON.stringify({ data, pagination })
+  //   });
+  // } catch (error: any) {
+  //   let err = error;
 
-    console.error(err);
-    callback(null, {
-      statusCode: err.status,
-      body: JSON.stringify({
-        error: { message: err.message, status: err.status, name: err.name, errors: err.errors }
-      })
-    });
-  } finally {
-    await db.close();
-  }
+  //   if (!err.status) {
+  //     err = new ServerError(error.message);
+  //   }
+
+  //   console.error(err);
+  //   callback(null, {
+  //     statusCode: err.status,
+  //     body: JSON.stringify({
+  //       error: { message: err.message, status: err.status, name: err.name, errors: err.errors }
+  //     })
+  //   });
+  // } finally {
+  //   await db.close();
+  // }
 };
